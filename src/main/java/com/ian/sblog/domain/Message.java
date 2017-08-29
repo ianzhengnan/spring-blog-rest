@@ -1,8 +1,11 @@
 package com.ian.sblog.domain;
 
+import java.util.Map;
+
 public class Message {
     private String msg;
     private String err;
+    private Map<String, Object> results;
 
     public Message() {
 
@@ -27,5 +30,13 @@ public class Message {
 
     public void setErr(String err) {
         this.err = err;
+    }
+
+    public Map<String, Object> getResults() {
+        return results;
+    }
+
+    public void setResults(Map<String, Object> results) {
+        this.results = results;
     }
 }
