@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<bg_user id="1" username="jan" password="jan1234" display_name="Jan" real_name="Jan Fan" />
+</dataset>
