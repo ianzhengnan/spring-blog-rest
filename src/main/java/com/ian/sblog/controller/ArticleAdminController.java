@@ -23,7 +23,7 @@ import com.ian.sblog.domain.Article;
 import com.ian.sblog.domain.Category;
 import com.ian.sblog.domain.User;
 import com.ian.sblog.util.SBlogConstants;
-import com.ian.sblog.validator.ArticleValidator;
+import com.ian.sblog.util.validator.ArticleValidator;
 
 @Controller
 public class ArticleAdminController extends BaseController {

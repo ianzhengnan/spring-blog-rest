@@ -1,4 +1,4 @@
-package com.ian.sblog.validator;
+package com.ian.sblog.util.validator;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.validation.Errors;

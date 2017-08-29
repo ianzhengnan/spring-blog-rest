@@ -1,4 +1,4 @@
-package com.ian.sblog.converter;
+package com.ian.sblog.util.converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;

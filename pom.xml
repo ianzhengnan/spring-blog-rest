@@ -137,7 +137,7 @@
   
   
   <build>
-    <finalName>sblog</finalName>
+    <finalName>sblog-rest</finalName>
   </build>
   
   

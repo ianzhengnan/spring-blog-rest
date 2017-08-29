@@ -23,7 +23,7 @@
 			<!-- 拦截所有请求 -->
 			<mvc:mapping path="/**" />
 			<!-- 自定义判断用户权限的拦截类 -->
-			<bean class="com.ian.sblog.interceptor.AuthorizedInterceptor"/>
+			<bean class="com.ian.sblog.util.interceptor.AuthorizedInterceptor"/>
 		</mvc:interceptor>
 	</mvc:interceptors>
 	
@@ -35,7 +35,7 @@
 	<bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
 		<property name="converters">
 			<list>
-				<bean class="com.ian.sblog.converter.IdToCategoryConverter"></bean>
+				<bean class="com.ian.sblog.util.converter.IdToCategoryConverter"></bean>
 			</list>
 		</property>
 	</bean>

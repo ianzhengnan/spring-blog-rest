@@ -1,4 +1,4 @@
-package com.ian.sblog.interceptor;
+package com.ian.sblog.util.interceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
