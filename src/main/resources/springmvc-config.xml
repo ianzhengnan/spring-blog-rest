@@ -3,8 +3,6 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:c="http://www.springframework.org/schema/c"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 		http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
 		http://www.springframework.org/schema/mvc
@@ -17,7 +15,7 @@
 	<mvc:annotation-driven conversion-service="conversionService" />
 	<!-- 使用默认的Servlet来响应静态文件 -->
 	<mvc:default-servlet-handler />
-	
+
 	<mvc:interceptors>
 		<mvc:interceptor>
 			<!-- 拦截所有请求 -->
@@ -26,10 +24,28 @@
 			<bean class="com.ian.sblog.util.interceptor.AuthorizedInterceptor"/>
 		</mvc:interceptor>
 	</mvc:interceptors>
-	
+
+
+	<!--<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">-->
+		<!--<property name="viewResolvers">-->
+			<!--<list>-->
+				<!--<bean class="org.springframework.web.servlet.view.BeanNameViewResolver"/>-->
+				<!--<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">-->
+					<!--<property name="prefix" value="/WEB-INF/jsp/"/>-->
+					<!--<property name="suffix" value=".jsp"/>-->
+				<!--</bean>-->
+			<!--</list>-->
+		<!--</property>-->
+		<!--<property name="defaultViews">-->
+			<!--<list>-->
+				<!--<bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView"/>-->
+			<!--</list>-->
+		<!--</property>-->
+	<!--</bean>-->
+
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/jsp/"/>
-		<property name="suffix" value=".jsp,.html"/>
+		<property name="suffix" value=".jsp"/>
 	</bean>
 	
 	<bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">

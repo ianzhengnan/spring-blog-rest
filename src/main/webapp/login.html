@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script src="/js/jquery-3.2.1.min.js"></script>
-<title>Login</title>
+<title>登录</title>
 <script>
 
 	function submitForm(){
@@ -30,10 +30,10 @@
 
 </head>
 <body>
-<form id="loginForm" action="login" method="post" onsubmit="return submitForm()">
-	User name: <input id="username" type="text" name="username"><br>
+<form id="loginForm" action="/sblog/account/login" method="post" onsubmit="return submitForm()">
+	User name: <input id="username" name="username"><br>
 	Password: <input id="password" type="password" name="password"><br>
-	<button id="login-submit-btn" type="submit">Submit</button>
+	<button id="login-submit-btn">Submit</button>
 </form>
 <br>
 <a href="/account/signup?show=1">Signup</a>

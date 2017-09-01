@@ -44,9 +44,8 @@ public class AuthorizedInterceptor implements HandlerInterceptor{
 		if(!flag) {
 			User user = (User) request.getSession().getAttribute(SBlogConstants.USER_SESSION);
 			if (user == null) {
-				request.setAttribute("message", "请先登录再访问网站！");
-				//request.getRequestDispatcher(SBlogConstants.LOGIN).forward(request, response); // url不能做出相应的改变
-				response.sendRedirect(SBlogConstants.LOGIN);
+//				request.setAttribute("message", "请先登录再访问网站！");
+//				response.sendRedirect(SBlogConstants.LOGIN);
 			}else {
 				flag = true;
 			}
