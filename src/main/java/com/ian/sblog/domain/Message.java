@@ -1,19 +1,21 @@
 package com.ian.sblog.domain;
 
-import java.util.Map;
+import com.ian.sblog.util.messsage.MsgType;
+
 
 public class Message {
+    private MsgType type;
+    private String key;
     private String msg;
-    private String err;
-    private Map<String, Object> results;
 
     public Message() {
 
     }
 
-    public Message(String msg, String err) {
+    public Message(MsgType type, String key, String msg) {
+        this.type = type;
+        this.key = key;
         this.msg = msg;
-        this.err = err;
     }
 
     public String getMsg() {
@@ -24,19 +26,19 @@ public class Message {
         this.msg = msg;
     }
 
-    public String getErr() {
-        return err;
+    public MsgType getType() {
+        return type;
     }
 
-    public void setErr(String err) {
-        this.err = err;
+    public void setType(MsgType type) {
+        this.type = type;
     }
 
-    public Map<String, Object> getResults() {
-        return results;
+    public String getKey() {
+        return key;
     }
 
-    public void setResults(Map<String, Object> results) {
-        this.results = results;
+    public void setKey(String key) {
+        this.key = key;
     }
 }

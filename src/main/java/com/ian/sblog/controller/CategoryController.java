@@ -4,6 +4,7 @@ import com.ian.sblog.domain.Category;
 import com.ian.sblog.domain.Message;
 import com.ian.sblog.domain.User;
 import com.ian.sblog.util.SBlogConstants;
+import com.ian.sblog.util.messsage.MsgType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -41,12 +42,14 @@ public class CategoryController extends BaseController {
     public Message addCategory(Category category, HttpSession httpSession){
         Message msg = new Message();
         if (category == null){
-            msg.setErr("类别不能为空");
+            msg.setType(MsgType.error);
+            msg.setMsg("类别不能为空");
             return msg;
         }
         category.setCreateAt(new Date());
         category.setCreateBy((User)httpSession.getAttribute(SBlogConstants.USER_SESSION));
         cats.createCategory(category);
+        msg.setType(MsgType.success);
         msg.setMsg("添加成功！");
         return msg;
     }
@@ -67,7 +70,7 @@ public class CategoryController extends BaseController {
         if (id != null){
             cats.deleteCategory(id);
         }
-        return new Message("删除成功！", "");
+        return new Message(MsgType.success, null, "删除成功!");
     }
 
 }

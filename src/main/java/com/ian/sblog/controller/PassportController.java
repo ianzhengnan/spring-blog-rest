@@ -1,11 +1,13 @@
 package com.ian.sblog.controller;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.ian.sblog.domain.Message;
 import com.ian.sblog.util.CookieHandler;
-import com.ian.sblog.util.MessageFactory;
+import com.ian.sblog.util.messsage.MsgType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -22,32 +24,30 @@ public class PassportController extends BaseController{
 							   HttpServletResponse response) {
 		
 		log.debug("PassportController >> login");
-		Message message = MessageFactory.getMessage();
+//		Message message = MessageFactory.getMessage();
+		Message message = new Message();
 
 		User user = us.logon(username, password);
 		if (user != null) {
 			CookieHandler.addCookie(response, "username", user.getUsername());
+			message.setType(MsgType.success);
 			message.setMsg("登录成功！");
-			message.setErr("");
 			return message;
 		}else {
 			// 未来用message class替换
-			message.setErr("用户名或密码错误！");
+            message.setType(MsgType.error);
+			message.setMsg("用户名或密码错误！");
 			return message;
 		}
 	}
 
-	@GetMapping("/login")
-	public String showLogin(){
-		return "login";
-	}
-
-	@RequestMapping("/logout")
-	public String logout(HttpSession httpSession) {
-		if(httpSession.getAttribute(SBlogConstants.USER_SESSION) != null) {
-			httpSession.removeAttribute(SBlogConstants.USER_SESSION);			
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public Message logout(HttpServletRequest request, HttpServletResponse response) {
+		Cookie cookie = CookieHandler.getCookie(request, SBlogConstants.USER);
+		if (cookie != null){
+			CookieHandler.delCookie(request, response, SBlogConstants.USER);
 		}
-		return "redirect:" + SBlogConstants.LOGIN;
+		return new Message(MsgType.success, null, "logout成功");
 	}
 
 	@RequestMapping(value = "/signup")
