@@ -14,6 +14,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ian.sblog.domain.User;
 import com.ian.sblog.util.SBlogConstants;
 
+import java.util.Date;
+
 @RestController
 @RequestMapping("/account")
 public class PassportController extends BaseController{
@@ -51,18 +53,22 @@ public class PassportController extends BaseController{
 	}
 
 	@RequestMapping(value = "/signup")
-	public ModelAndView signup(String show, ModelAndView mv, @ModelAttribute User user, HttpSession httpSession) {
+	public Message signup(@ModelAttribute User user, HttpSession httpSession) {
+
+		Message msg = new Message();
 
 		if (!us.checkUsername(user)) {
+			user.setCreateAt(new Date());
+			user.setLastModifyAt(new Date());
 			us.register(user);
 			httpSession.setAttribute(SBlogConstants.USER_SESSION, user);
-			mv.setViewName("redirect:../main");
+			msg.setType(MsgType.success);
+			msg.setMsg("注册成功");
 		}else {
-			mv.addObject("message", "用户名已经存在");
-			mv.setViewName("user/signup");
+			msg.setType(MsgType.error);
+			msg.setMsg("用户名已经存在");
 		}
-
-		return mv;
+		return msg;
 	}
 	
 }

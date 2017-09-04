@@ -1,5 +1,6 @@
 package com.ian.sblog.dao.provider;
 
+import java.util.Date;
 import java.util.Map;
 
 import org.apache.ibatis.jdbc.SQL;
@@ -133,6 +134,9 @@ public class UserDynaSqlProvider {
 				}
 				if(user.getLastModifyAt() != null) {
 					VALUES("last_modify_at", "#{lastModifyAt}");
+				}
+				if(user.getCreateAt() != null){
+					VALUES("create_at", "#{createAt}");
 				}
 			}
 		}.toString();
