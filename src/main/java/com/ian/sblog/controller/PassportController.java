@@ -9,7 +9,6 @@ import com.ian.sblog.domain.Message;
 import com.ian.sblog.util.CookieHandler;
 import com.ian.sblog.util.messsage.MsgType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.ian.sblog.domain.User;
 import com.ian.sblog.util.SBlogConstants;
