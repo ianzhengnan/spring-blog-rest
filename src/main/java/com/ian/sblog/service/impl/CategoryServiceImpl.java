@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -20,7 +21,9 @@ public class CategoryServiceImpl implements CategoryService {
 	
 	private static final Logger log = LoggerFactory.getLogger(CategoryServiceImpl.class);
 
-	@Autowired
+	@Autowired(required = false) // required = false表示没有相应的bean时，不会抛出异常
+	@Lazy //延迟到调用此属性的时候才注入, 而且此处和目标Bean处都得标记@Lazy，否则延迟加载无效
+	//@Scope("prototype") // 注意：spring默认的scope都是singleton.
 	private CategoryDao categoryDao;
 	
 	@Override

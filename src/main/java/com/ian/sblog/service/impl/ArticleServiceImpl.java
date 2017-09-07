@@ -22,9 +22,13 @@ import com.ian.sblog.service.ArticleService;
 public class ArticleServiceImpl implements ArticleService{
 
 	private static final Logger log = LoggerFactory.getLogger(ArticleServiceImpl.class);
-	
-	@Autowired
+
 	private ArticleDao articleDao;
+
+	@Autowired //尽量在方法而不是在属性上自动绑定，这样做更加面向对象，而且更利于做单元测试
+	public void setArticleDao(ArticleDao articleDao){
+		this.articleDao = articleDao;
+	}
 	
 	@Override
 	public void createArticle(Article article) {
