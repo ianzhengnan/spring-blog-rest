@@ -3,6 +3,7 @@ package com.ian.sblog.util.interceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ian.sblog.domain.Message;
 import com.ian.sblog.util.messsage.MsgType;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -10,6 +11,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ian.sblog.domain.User;
 import com.ian.sblog.util.SBlogConstants;
+
+import java.io.PrintWriter;
 
 public class AuthorizedInterceptor implements HandlerInterceptor{
 
@@ -46,9 +49,14 @@ public class AuthorizedInterceptor implements HandlerInterceptor{
 		if(!flag) {
 			User user = (User) request.getSession().getAttribute(SBlogConstants.USER_SESSION);
 			if (user == null) {
-				request.setAttribute("message", new Message(MsgType.error, null, "请先登录！"));
-//				flag = true;
-//				response.sendRedirect(SBlogConstants.LOGIN);
+				ObjectMapper objectMapper = new ObjectMapper();
+				String msg = objectMapper.writeValueAsString(new Message(MsgType.error, null, "请先登录！"));
+				response.setCharacterEncoding("UTF-8");
+				response.setContentType("application/json");
+				response.setStatus(403);
+				PrintWriter out = response.getWriter(); // 获取print writer要在设置 character encoding之后，否则会有乱码
+				out.print(msg);
+				out.flush();
 			}else {
 				flag = true;
 			}
