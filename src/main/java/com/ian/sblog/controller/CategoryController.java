@@ -32,7 +32,7 @@ public class CategoryController extends BaseController {
 
     @GetMapping("/edit/{id}")
     public Object showEditPage(@PathVariable String id){
-        if (id != null){
+        if (id == null){
             msg.setType(MsgType.error);
             msg.setMsg("id不能为空");
             return msg;

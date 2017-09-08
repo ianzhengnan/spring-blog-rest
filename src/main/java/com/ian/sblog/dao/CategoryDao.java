@@ -22,8 +22,8 @@ public interface CategoryDao {
 			+ " #{description}, #{visiable}, #{createBy.id}, #{createAt})")
 	void save(Category category);
 	
-	@Update("update " + CATEGORYTABLE + " SET title = #{category.title}, description = #{category.description}, visiable = #{category.visiable}"
-			+ ", user_id = #{category.createBy.id} where id = #{category.id}")
+	@Update("update " + CATEGORYTABLE + " SET title = #{title}, description = #{description}, visiable = #{visiable}"
+			+ ", user_id = #{createBy.id} where id = #{id}")
 	void updateCategory(Category category);
 	
 	@Delete("delete from " + CATEGORYTABLE + " where id = #{id}")
