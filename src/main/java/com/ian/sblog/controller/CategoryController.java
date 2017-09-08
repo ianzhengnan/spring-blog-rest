@@ -1,11 +1,11 @@
 package com.ian.sblog.controller;
 
 import com.ian.sblog.domain.Category;
-import com.ian.sblog.domain.Message;
 import com.ian.sblog.domain.User;
 import com.ian.sblog.util.SBlogConstants;
+import com.ian.sblog.util.messsage.Message;
 import com.ian.sblog.util.messsage.MsgType;
-import org.springframework.stereotype.Controller;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,34 +13,36 @@ import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/category")
 public class CategoryController extends BaseController {
 
     private List<Category> categories;
 
+    @Autowired
+    private Message msg;
+
     @GetMapping
-    public String showAllCategories(HttpSession httpSession, Model model){
+    public List<Category> showAllCategories(HttpSession httpSession, Model model){
         User user = (User)httpSession.getAttribute(SBlogConstants.USER_SESSION);
         categories = cats.getCategoriesByUser(user.getId());
         model.addAttribute("categories", categories);
-        return "category/showcategories";
+        return categories;
     }
 
     @GetMapping("/edit/{id}")
-    public String showEditPage(Model model, @PathVariable String id, @ModelAttribute Category category){
+    public Object showEditPage(@PathVariable String id){
         if (id != null){
-            return "category/showcategories";
+            msg.setType(MsgType.error);
+            msg.setMsg("id不能为空");
+            return msg;
         }
-        category = cats.getCategoryById(id);
-        model.addAttribute("category", category);
-        return "category/editcategory";
+        Category category = cats.getCategoryById(id);
+        return category;
     }
 
     @PostMapping("/new")
-    @ResponseBody
     public Message addCategory(Category category, HttpSession httpSession){
-        Message msg = new Message();
         if (category == null){
             msg.setType(MsgType.error);
             msg.setMsg("类别不能为空");
@@ -55,22 +57,27 @@ public class CategoryController extends BaseController {
     }
 
     @PostMapping("/edit")
-    @ResponseBody
-    public String editCategory(Category category){
+    public Message editCategory(Category category){
         if (category != null) {
             cats.updateCategory(category);
         }
-        return "redirect:/category";
-//        return new Message("编辑成功！", "");
+        msg.setType(MsgType.success);
+        msg.setMsg("category更新成功");
+        return msg;
     }
 
     @PostMapping("/del/{id}")
-    @ResponseBody
     public Message deleteCategory(@PathVariable Integer id){
         if (id != null){
             cats.deleteCategory(id);
+        }else{
+            msg.setMsg("id不能为空");
+            msg.setType(MsgType.error);
+            return msg;
         }
-        return new Message(MsgType.success, null, "删除成功!");
+        msg.setMsg("category删除成功");
+        msg.setType(MsgType.success);
+        return msg;
     }
 
 }

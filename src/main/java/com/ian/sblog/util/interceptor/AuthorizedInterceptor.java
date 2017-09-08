@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ian.sblog.domain.Message;
+import com.ian.sblog.service.impl.SimpleMessage;
 import com.ian.sblog.util.messsage.MsgType;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -50,10 +50,11 @@ public class AuthorizedInterceptor implements HandlerInterceptor{
 			User user = (User) request.getSession().getAttribute(SBlogConstants.USER_SESSION);
 			if (user == null) {
 				ObjectMapper objectMapper = new ObjectMapper();
-				String msg = objectMapper.writeValueAsString(new Message(MsgType.error, null, "请先登录！"));
+				String msg = objectMapper.writeValueAsString(new SimpleMessage(MsgType.error, null, "请先登录！"));
 				response.setCharacterEncoding("UTF-8");
 				response.setContentType("application/json");
 				response.setStatus(403);
+//				response.sendError(403, "No authorization to visit this url, please login first.");
 				PrintWriter out = response.getWriter(); // 获取print writer要在设置 character encoding之后，否则会有乱码
 				out.print(msg);
 				out.flush();

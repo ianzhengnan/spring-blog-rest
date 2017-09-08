@@ -7,16 +7,17 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import com.ian.sblog.util.messsage.Message;
 import com.ian.sblog.util.PageHandler;
 import com.ian.sblog.util.PageModel;
+import com.ian.sblog.util.messsage.MsgType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ian.sblog.domain.Article;
@@ -25,7 +26,7 @@ import com.ian.sblog.domain.User;
 import com.ian.sblog.util.SBlogConstants;
 import com.ian.sblog.util.validator.ArticleValidator;
 
-@Controller
+@RestController
 public class ArticleAdminController extends BaseController {
 
     @Autowired
@@ -34,8 +35,11 @@ public class ArticleAdminController extends BaseController {
 
     private List<Article> articles;
 
+    @Autowired
+    private Message msg;
+
     @GetMapping("/postlist")
-    public String showPostList(Model model, HttpSession httpSession, String status, Integer page) {
+    public List<Article> showPostList(HttpSession httpSession, String status, Integer page) {
         Map<String, Object> params = new HashMap<>();
         Article article = new Article();
         // get user from session
@@ -49,30 +53,16 @@ public class ArticleAdminController extends BaseController {
         params.put("article", article);
 
         Integer totalRecords = arts.getArticleNumber(params);
-        PageModel pageModel = PageHandler.setPageParameters(totalRecords, params, page);
-        model.addAttribute("pageModel", pageModel);
+        PageModel pageModel = PageHandler.setPageParameters(totalRecords, page);
+        params.put("pageModel", pageModel);
 
         articles = arts.getArticles(params);
-        model.addAttribute("articles", articles);
-        model.addAttribute("status", status);
-        return "article/postlist";
-    }
-
-    @GetMapping("/postedit")
-    public String showPostEdit(Model model, @ModelAttribute Article article, HttpSession httpSession, Integer id) {
-        User user = (User) httpSession.getAttribute(SBlogConstants.USER_SESSION);
-        List<Category> categories = cats.getCategoriesByUser(user.getId());
-        model.addAttribute("categories", categories);
-        if (id != null && id != 0) {
-            article = arts.getArticleById(id);
-            model.addAttribute("article", article);
-        }
-        return "article/posteditadd";
+        return articles;
     }
 
     @PostMapping("/postedit")
-    public ModelAndView postArticle(String isPub, @ModelAttribute Article article,
-                                    HttpSession httpSession, Errors errors, Model model) {
+    public Message postArticle(String isPub, @ModelAttribute Article article,
+                               HttpSession httpSession, Errors errors) {
 
         User user = (User) httpSession.getAttribute(SBlogConstants.USER_SESSION);
         ModelAndView mv = new ModelAndView();
@@ -82,8 +72,9 @@ public class ArticleAdminController extends BaseController {
         articleValidator.validate(article, errors);
 
         if (errors.hasErrors()) {
-            mv.setViewName("article/posteditadd");
-            return mv;
+            msg.setType(MsgType.error);
+            msg.setMsg(errors.getAllErrors());
+            return msg;
         }
 
         if (article.getId() == null) {
@@ -94,41 +85,53 @@ public class ArticleAdminController extends BaseController {
 
         if (isPub != null && isPub.equals("1")) {
             article.setStatus("publish");
-            mv.setViewName("redirect:/" + user.getUsername() + "/article/" + article.getId());
         } else {
             article.setStatus("draft");
-            mv.setViewName("article/posteditadd");
         }
         article.setLastModifyAt(new Date());
         arts.updateArticle(article);
-        return mv;
+        msg.setType(MsgType.success);
+        msg.setMsg("添加文章成功！");
+        return msg;
     }
 
     @GetMapping("/del")
-    public String deleteArticle(Integer id, HttpSession httpSession) {
+    public Message deleteArticle(Integer id) {
         if (id != null && id != 0) {
             arts.removeArticle(id);
+        }else{
+            idIsEmpty();
+            return msg;
         }
-        User user = (User) httpSession.getAttribute(SBlogConstants.USER_SESSION);
-        return "redirect:/" + user.getUsername() + "/article";
+        msg.setType(MsgType.success);
+        msg.setMsg("删除成功！");
+        return msg;
     }
 
     @GetMapping("/top")
-    public String topArticle(Integer id, HttpSession httpSession) {
+    public Message topArticle(Integer id, HttpSession httpSession) {
         if (id != null && id != 0) {
             setTop(id, "set");
+        }else{
+            idIsEmpty();
+            return msg;
         }
-        User user = (User) httpSession.getAttribute(SBlogConstants.USER_SESSION);
-        return "redirect:/postlist";
+        msg.setType(MsgType.success);
+        msg.setMsg("置顶成功");
+        return msg;
     }
 
     @GetMapping("/untop")
-    public String unTopArticle(Integer id, HttpSession httpSession) {
+    public Message unTopArticle(Integer id, HttpSession httpSession) {
         if (id != null && id != 0) {
             setTop(id, "unset");
+        }else{
+            idIsEmpty();
+            return msg;
         }
-        User user = (User) httpSession.getAttribute(SBlogConstants.USER_SESSION);
-        return "redirect:/postlist";
+        msg.setType(MsgType.success);
+        msg.setMsg("取消置顶成功");
+        return msg;
     }
 
     private void setTop(Integer id, String opt) {
@@ -143,6 +146,9 @@ public class ArticleAdminController extends BaseController {
         arts.updateArticle(article);
     }
 
-
+    private void idIsEmpty(){
+        msg.setMsg("id不能为空");
+        msg.setType(MsgType.error);
+    }
 
 }

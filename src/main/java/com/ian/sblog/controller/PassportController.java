@@ -5,9 +5,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.ian.sblog.domain.Message;
+import com.ian.sblog.util.messsage.Message;
 import com.ian.sblog.util.CookieHandler;
 import com.ian.sblog.util.messsage.MsgType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.ian.sblog.domain.User;
@@ -19,28 +20,29 @@ import java.util.Date;
 @RequestMapping("/account")
 public class PassportController extends BaseController{
 
+	@Autowired
+	private Message msg;
+
 	@RequestMapping(value = "/login", method = RequestMethod.POST) // 只有一个参数时候，可以简写省去value = ""
 	public Message handleLogin(@RequestParam(value = "username", required = false) String username,
 							   @RequestParam(value = "password", required = false) String password,
 							   HttpServletResponse response, HttpSession httpSession) {
 		
 		log.debug("PassportController >> login");
-//		Message message = MessageFactory.getMessage();
-		Message message = new Message();
 
 		User user = us.logon(username, password);
 		if (user != null) {
 			CookieHandler.addCookie(response, "username", user.getUsername());
 			// session is still working in restfully mode
 			httpSession.setAttribute(SBlogConstants.USER_SESSION, user);
-			message.setType(MsgType.success);
-			message.setMsg("登录成功！");
-			return message;
+			msg.setType(MsgType.success);
+			msg.setMsg("登录成功！");
+			return msg;
 		}else {
 			// 未来用message class替换
-            message.setType(MsgType.error);
-			message.setMsg("用户名或密码错误！");
-			return message;
+			msg.setType(MsgType.error);
+			msg.setMsg("用户名或密码错误！");
+			return msg;
 		}
 	}
 
@@ -54,14 +56,13 @@ public class PassportController extends BaseController{
 		if (user != null){
 			httpSession.removeAttribute(SBlogConstants.USER_SESSION);
 		}
-
-		return new Message(MsgType.success, null, "logout成功");
+		msg.setMsg("logout成功");
+		msg.setType(MsgType.success);
+		return msg;
 	}
 
 	@RequestMapping(value = "/signup")
 	public Message signup(@ModelAttribute User user, HttpSession httpSession) {
-
-		Message msg = new Message();
 
 		if (!us.checkUsername(user)) {
 			user.setCreateAt(new Date());

@@ -1,28 +1,30 @@
-package com.ian.sblog.domain;
+package com.ian.sblog.service.impl;
 
 import com.ian.sblog.util.messsage.MsgType;
+import com.ian.sblog.util.messsage.Message;
+import org.springframework.stereotype.Service;
 
-
-public class Message {
+@Service
+public class SimpleMessage implements Message{
     private MsgType type;
     private String key;
-    private String msg;
+    private Object msg;
 
-    public Message() {
+    public SimpleMessage() {
 
     }
 
-    public Message(MsgType type, String key, String msg) {
+    public SimpleMessage(MsgType type, String key, String msg) {
         this.type = type;
         this.key = key;
         this.msg = msg;
     }
 
-    public String getMsg() {
+    public Object getMsg() {
         return msg;
     }
 
-    public void setMsg(String msg) {
+    public void setMsg(Object msg) {
         this.msg = msg;
     }
 

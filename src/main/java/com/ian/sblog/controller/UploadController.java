@@ -8,12 +8,18 @@ import java.io.InputStream;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.ian.sblog.util.messsage.Message;
+import com.ian.sblog.util.messsage.MsgType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class UploadController extends BaseController {
+
+	@Autowired
+	private Message msg;
 
 	/**
 	 * Content-type:application/octet-stream 的上传方式，如果是multipart方式与此不同，要简单许多
@@ -24,7 +30,7 @@ public class UploadController extends BaseController {
 	 */
 	@PostMapping("/upload")
 	@ResponseBody
-	public Object uploadFile(HttpServletRequest request) throws Exception {
+	public Message uploadFile(HttpServletRequest request) throws Exception {
 		String fileName = "";
 		try {
 			InputStream inputStream = request.getInputStream();
@@ -54,23 +60,11 @@ public class UploadController extends BaseController {
 			log.error(e.toString(), e);
 		} finally {
 		}
-		
-		return new UploadMsg("/upload/" + fileName, "");
+		msg.setType(MsgType.success);
+		msg.setMsg("/upload/" + fileName);
+		return msg;
 		
 	}
 	
-	class UploadMsg {
-		private String msg;
-		private String err;
-		public UploadMsg(String msg, String err) {
-			this.msg = msg;
-			this.err = err;
-		}
-		public String getMsg() {
-			return this.msg;
-		}
-		public String getErr() {
-			return this.err;
-		}
-	}
+
 }

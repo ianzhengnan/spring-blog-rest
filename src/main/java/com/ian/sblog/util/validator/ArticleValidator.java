@@ -17,6 +17,10 @@ public class ArticleValidator implements Validator{
 
 	@Override
 	public void validate(Object target, Errors errors) {
+		ValidationUtils.rejectIfEmpty(errors, "category", "类别不能为空");
+		if (errors.hasErrors()){
+			return;
+		}
 		ValidationUtils.rejectIfEmpty(errors, "subject", null, "主题不能为空");
 		if (errors.hasErrors()) {
 			return;
