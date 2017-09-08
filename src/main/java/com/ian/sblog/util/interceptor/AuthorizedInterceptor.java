@@ -3,6 +3,8 @@ package com.ian.sblog.util.interceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ian.sblog.domain.Message;
+import com.ian.sblog.util.messsage.MsgType;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -44,8 +46,8 @@ public class AuthorizedInterceptor implements HandlerInterceptor{
 		if(!flag) {
 			User user = (User) request.getSession().getAttribute(SBlogConstants.USER_SESSION);
 			if (user == null) {
-				request.setAttribute("message", "请先登录再访问网站！");
-				flag = true;
+				request.setAttribute("message", new Message(MsgType.error, null, "请先登录！"));
+//				flag = true;
 //				response.sendRedirect(SBlogConstants.LOGIN);
 			}else {
 				flag = true;

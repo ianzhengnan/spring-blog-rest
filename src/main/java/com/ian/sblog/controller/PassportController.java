@@ -22,7 +22,7 @@ public class PassportController extends BaseController{
 	@RequestMapping(value = "/login", method = RequestMethod.POST) // 只有一个参数时候，可以简写省去value = ""
 	public Message handleLogin(@RequestParam(value = "username", required = false) String username,
 							   @RequestParam(value = "password", required = false) String password,
-							   HttpServletResponse response) {
+							   HttpServletResponse response, HttpSession httpSession) {
 		
 		log.debug("PassportController >> login");
 //		Message message = MessageFactory.getMessage();
@@ -31,6 +31,8 @@ public class PassportController extends BaseController{
 		User user = us.logon(username, password);
 		if (user != null) {
 			CookieHandler.addCookie(response, "username", user.getUsername());
+			// session is still working in restfully mode
+			httpSession.setAttribute(SBlogConstants.USER_SESSION, user);
 			message.setType(MsgType.success);
 			message.setMsg("登录成功！");
 			return message;
@@ -43,11 +45,16 @@ public class PassportController extends BaseController{
 	}
 
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
-	public Message logout(HttpServletRequest request, HttpServletResponse response) {
+	public Message logout(HttpServletRequest request, HttpServletResponse response, HttpSession httpSession) {
 		Cookie cookie = CookieHandler.getCookie(request, SBlogConstants.USER);
 		if (cookie != null){
 			CookieHandler.delCookie(request, response, SBlogConstants.USER);
 		}
+		User user = (User)httpSession.getAttribute(SBlogConstants.USER_SESSION);
+		if (user != null){
+			httpSession.removeAttribute(SBlogConstants.USER_SESSION);
+		}
+
 		return new Message(MsgType.success, null, "logout成功");
 	}
 
