@@ -6,9 +6,9 @@ public interface Message {
 
     Object getMsg();
 
-    void setKey(String key);
+    void setKey(Object key);
 
-    String getKey();
+    Object getKey();
 
     void setType(MsgType type);
 

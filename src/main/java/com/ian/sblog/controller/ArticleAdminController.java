@@ -73,6 +73,7 @@ public class ArticleAdminController extends BaseController {
 
         if (errors.hasErrors()) {
             msg.setType(MsgType.error);
+            msg.setKey(null);
             msg.setMsg(errors.getAllErrors());
             return msg;
         }
@@ -92,6 +93,7 @@ public class ArticleAdminController extends BaseController {
         arts.updateArticle(article);
         msg.setType(MsgType.success);
         msg.setMsg("添加文章成功！");
+        msg.setKey(article);
         return msg;
     }
 
