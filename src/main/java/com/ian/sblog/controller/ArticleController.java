@@ -35,7 +35,8 @@ public class ArticleController extends BaseController{
 		params.put("article", article);
 
 		Integer totalRecords = arts.getArticleNumber(params);
-		PageModel pageModel = PageHandler.setPageParameters(totalRecords, page);
+		PageModel pageModel = PageHandler.setPageParameters(totalRecords);
+		pageModel.setCurrentPage(page);
 		params.put("pageModel", pageModel);
 
 		articles = arts.getArticles(params);

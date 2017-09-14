@@ -53,11 +53,28 @@ public class ArticleAdminController extends BaseController {
         params.put("article", article);
 
         Integer totalRecords = arts.getArticleNumber(params);
-        PageModel pageModel = PageHandler.setPageParameters(totalRecords, page);
+        PageModel pageModel = PageHandler.setPageParameters(totalRecords);
+        pageModel.setCurrentPage(page);
         params.put("pageModel", pageModel);
 
         articles = arts.getArticles(params);
         return articles;
+    }
+
+    @GetMapping("/getPageModel")
+    public PageModel getPageModel(String status, HttpSession httpSession){
+        Map<String, Object> params = new HashMap<>();
+        Article article = new Article();
+        article.setCreateBy((User)httpSession.getAttribute(SBlogConstants.USER_SESSION));
+        if (status == null || status.equals("publish") ){
+            article.setStatus("publish");
+        }else{
+            article.setStatus("draft");
+        }
+        params.put("article", article);
+        Integer totalRecords = arts.getArticleNumber(params);
+        PageModel pageModel = PageHandler.setPageParameters(totalRecords);
+        return pageModel;
     }
 
     @PostMapping("/postedit")

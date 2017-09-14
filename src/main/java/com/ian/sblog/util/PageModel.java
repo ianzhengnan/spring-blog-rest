@@ -12,6 +12,11 @@ public class PageModel{
 
     }
 
+    public PageModel(Integer firstLimitParam, Integer pageSize){
+        this.pageSize = pageSize;
+        this.firstLimitParam = firstLimitParam;
+    }
+
     public PageModel(Integer pageSize, Integer currentPage, Integer totalPage, Integer totalRecords) {
         this.pageSize = pageSize;
         this.currentPage = currentPage == null ? 1 : currentPage;
@@ -41,7 +46,7 @@ public class PageModel{
     }
 
     public void setCurrentPage(Integer currentPage) {
-        this.currentPage = currentPage;
+        this.currentPage = currentPage == null ? 1 : currentPage;
     }
 
     public Integer getTotalPage() {
