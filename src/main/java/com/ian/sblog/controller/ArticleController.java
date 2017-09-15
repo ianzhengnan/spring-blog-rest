@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import com.ian.sblog.domain.Comment;
 import com.ian.sblog.util.PageHandler;
 import com.ian.sblog.util.PageModel;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,7 +49,6 @@ public class ArticleController extends BaseController{
 		
 		Article article = arts.getArticleById(articleId);
 		if (article != null) {
-//			model.addAttribute("article", article);
 			// set visit count
 			article.setVisitCount((article.getVisitCount() == null ? 0 : article.getVisitCount()) + 1);
 			arts.updateArticle(article);
