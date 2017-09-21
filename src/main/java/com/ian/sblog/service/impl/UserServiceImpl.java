@@ -6,6 +6,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -25,6 +26,7 @@ public class UserServiceImpl implements UserService{
 	private UserDao userDao;
 	
 	@Override
+	@Cacheable(cacheNames = "users", key = "#username")
 	public User logon(String username, String password) {
 		log.debug("UserServiceImpl >> logon");
 		return userDao.selectByUsernameAndPassword(username, password);
